@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abhishek Yadav - Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      color: #333;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      position: relative;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    section.visible {
+      opacity: 1;
+    }
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      padding: 1rem 2rem;
+      opacity: 0;
+      transform: translateY(-100%);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .navbar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .navbar a {
+      color: #555;
+      text-decoration: none;
+      margin: 0 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    .navbar a:hover {
+      color: #14b8a6;
+    }
+    .navbar a.active {
+      color: #14b8a6;
+      border-bottom: 2px solid #14b8a6;
+      padding-bottom: 0.2rem;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #14b8a6;
+      color: #fff;
+      padding: 0.8rem;
+      border-radius: 50%;
+      display: none;
+      z-index: 10;
+      transition: background 0.3s ease;
+    }
+    .back-to-top:hover {
+      background: #0d9488;
+    }
+    h1, h2, h3 {
+      font-family: 'Poppins', sans-serif;
+      color: #1f2937;
+    }
+    h1 {
+      font-size: 6rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      background: linear-gradient(90deg, #14b8a6, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeInScale 1.5s ease forwards;
+    }
+    h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    h2.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    p {
+      color: #4b5563;
+      line-height: 1.6;
+    }
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes fadeInFromRight {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(100%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+    }
+    @keyframes fadeOutToRight {
+      0% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(100%);
+      }
+    }
+    /* Floating Sidebar */
+    .floating-sidebar {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 2rem;
+      padding: 1rem 0.5rem;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .floating-sidebar.visible {
+      display: flex;
+      animation: fadeInFromRight 0.7s ease forwards;
+    }
+    .floating-sidebar.hidden {
+      animation: fadeOutToRight 0.7s ease forwards;
+    }
+    .floating-sidebar a {
+      color: #14b8a6;
+      font-size: 1.5rem;
+      transition: color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+      position: relative;
+    }
+    .floating-sidebar a:hover {
+      color: #0d9488;
+      transform: scale(1.2);
+      filter: invert(1);
+    }
+    .floating-sidebar a .tooltip {
+      visibility: hidden;
+      background: #1f2937;
+      color: #fff;
+      text-align: center;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.5rem;
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .floating-sidebar a:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    /* Static Icons in Let's Connect Section */
+    .static-icons {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .static-icons a {
+      color: #14b8a6;
+      font-size: 1.5rem;
+      transition: color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+      position: relative;
+    }
+    .static-icons a:hover {
+      color: #0d9488;
+      transform: scale(1.2);
+      filter: invert(1);
+    }
+    .static-icons a .tooltip {
+      visibility: hidden;
+      background: #1f2937;
+      color: #fff;
+      text-align: center;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.5rem;
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .static-icons a:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    /* Hero Section */
+    #about {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .typed-cursor {
+      color: #14b8a6;
+      font-size: 1.5rem;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .hero-button {
+      background: #14b8a6;
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hero-button:hover {
+      filter: invert(1);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    /* Skills Section */
+    .skills-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .skills-card.visible {
+      animation: slideIn 0.5s ease forwards;
+    }
+    .skills-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      background: #e6fffa;
+    }
+    .skills-card:hover h3 {
+      color: #14b8a6;
+    }
+    .skills-card:hover p {
+      color: #1f2937;
+    }
+    /* Projects Section */
+    .filter-btn {
+      background: #e5e7eb;
+      color: #4b5563;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease, filter 0.3s ease;
+    }
+    .filter-btn:hover {
+      background: #14b8a6;
+      color: #fff;
+      filter: invert(1);
+    }
+    .project-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .project-card.visible {
+      animation: slideIn 0.5s ease forwards;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      background: #e6fffa;
+    }
+    .project-card:hover h3 {
+      color: #14b8a6;
+    }
+    .project-card:hover p {
+      color: #1f2937;
+    }
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .tech-badge {
+      background: #f1f5f9;
+      color: #4b5563;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+    .project-card:hover .tech-badge {
+      background: #14b8a6;
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .proprietary-note, .figma-link {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .figma-link a {
+      color: #14b8a6;
+      text-decoration: none;
+    }
+    .figma-link a:hover {
+      text-decoration: underline;
+    }
+    /* Experience Section */
+    .experience-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .experience-card.visible {
+      animation: slideIn 0.5s ease forwards;
+    }
+    .experience-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      background: #e6fffa;
+    }
+    .experience-card:hover h3 {
+      color: #14b8a6;
+    }
+    .experience-card:hover p {
+      color: #1f2937;
+    }
+    /* Education Section */
+    .education-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: transform 0.5s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .education-card.visible {
+      animation: slideIn 0.5s ease forwards;
+    }
+    .education-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      background: #e6fffa;
+    }
+    .education-card:hover h3 {
+      color: #14b8a6;
+    }
+    .education-card:hover p {
+      color: #1f2937;
+    }
+    /* Let's Connect Section */
+    #lets-connect {
+      background: #fff;
+      text-align: center;
+    }
+    /* Footer */
+    footer {
+      background: #1f2937;
+      color: #fff;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <a href="#" class="text-xl font-bold text-[#1f2937]">Abhishek Yadav</a>
+      <div>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#education" class="nav-link">Education</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Floating Sidebar -->
+  <div class="floating-sidebar visible">
+    <a href="mailto:abhilk985@gmail.com">
+      <i class="fas fa-envelope"></i>
+      <span class="tooltip">Email</span>
+    </a>
+    <a href="https://linkedin.com/in/abhishek-yadav-2107">
+      <i class="fab fa-linkedin"></i>
+      <span class="tooltip">LinkedIn</span>
+    </a>
+    <a href="https://github.com/your-username">
+      <i class="fab fa-github"></i>
+      <span class="tooltip">GitHub</span>
+    </a>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="about" class="pt-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="mb-4">Hi, I'm Abhishek Yadav</h1>
+      <p class="text-2xl mb-6"><span id="typed"></span></p>
+      <p class="text-lg max-w-2xl mx-auto mb-8">
+        Rocking 4+ years of coding wizardry with C#, .NET Core, Azure, and Power BI, I conjure up scalable apps, weave systems together, and sprinkle business insights like magic dust. Ready to cast spells in hybrid, on-site, or remote roles—anywhere in the galaxy!
+      </p>
+      <div class="button-container">
+        <a href="mailto:abhilk985@gmail.com" class="hero-button">Get in Touch</a>
+        <a href="Abhishek_Yadav_SWE_2025.pdf" class="hero-button" download>Download Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-center mb-12">Skills</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="skills-card">
+          <h3 class="mb-2">Programming</h3>
+          <p>C#, .NET Core, JavaScript, Vue.js, Angular, ASP.NET MVC</p>
+        </div>
+        <div class="skills-card">
+          <h3 class="mb-2">Integrations & Automation</h3>
+          <p>REST APIs, Azure Data Factory, Power Automate, SignalR, WCF</p>
+        </div>
+        <div class="skills-card">
+          <h3 class="mb-2">Business Analysis</h3>
+          <p>Power BI, SSRS, Requirements Gathering, Process Modeling</p>
+        </div>
+        <div class="skills-card">
+          <h3 class="mb-2">Cloud & DevOps</h3>
+          <p>AWS, Azure DevOps, Docker, CI/CD, Azure Logic Apps</p>
+        </div>
+        <div class="skills-card">
+          <h3 class="mb-2">Databases</h3>
+          <p>SQL Server, PostgreSQL, MongoDB, Cosmos DB</p>
+        </div>
+        <div class="skills-card">
+          <h3 class="mb-2">Other</h3>
+          <p>UI/UX Design, Technical Documentation, Agile/Scrum</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-center mb-12">Projects</h2>
+      <div class="flex justify-center flex-wrap mb-8">
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="swe">Software Engineering</button>
+        <button class="filter-btn" data-filter="integrations">Integrations</button>
+        <button class="filter-btn" data-filter="ba">Business Analysis</button>
+        <button class="filter-btn" data-filter="uiux">UI/UX</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="project-grid">
+        <div class="project-card" data-category="swe integrations">
+          <h3 class="mb-2">myThiess Mobile App</h3>
+          <p class="mb-4">Developed a mobile app for Thiess to digitize leave requests and approvals for front-line workers, replacing paper-based processes. Built with Ionic and Vue.js, integrated with Azure services, and secured via Azure AD.</p>
+          <div class="tech-stack">
+            <span class="tech-badge">Ionic</span>
+            <span class="tech-badge">Vue.js</span>
+            <span class="tech-badge">Azure App Service</span>
+            <span class="tech-badge">Azure SQL</span>
+            <span class="tech-badge">Azure AD</span>
+            <span class="tech-badge">Firebase</span>
+          </div>
+          <p class="proprietary-note">Proprietary project; code available upon request during interviews.</p>
+        </div>
+        <div class="project-card" data-category="swe integrations ba">
+          <h3 class="mb-2">Infomine Data Management System</h3>
+          <p class="mb-4">Developed a centralized system for mining operations using C#, .NET Core, and SQL Server. Designed REST APIs with SignalR for real-time data capture, improving data accuracy by 30%.</p>
+          <div class="tech-stack">
+            <span class="tech-badge">C#</span>
+            <span class="tech-badge">.NET Core</span>
+            <span class="tech-badge">SQL Server</span>
+            <span class="tech-badge">Vue.js</span>
+            <span class="tech-badge">Azure Data Factory</span>
+          </div>
+          <p class="proprietary-note">Proprietary project; code available upon request during interviews.</p>
+        </div>
+        <div class="project-card" data-category="swe integrations">
+          <h3 class="mb-2">MineData Legacy Optimization</h3>
+          <p class="mb-4">Optimized a .NET Framework application using WCF, reducing data retrieval time by 25%. Enhanced UI with Vue.js and custom datetimepicker components.</p>
+          <div class="tech-stack">
+            <span class="tech-badge">.NET Framework</span>
+            <span class="tech-badge">WCF</span>
+            <span class="tech-badge">Vue.js</span>
+            <span class="tech-badge">Redis</span>
+          </div>
+          <p class="proprietary-note">Proprietary project; code available upon request during interviews.</p>
+        </div>
+        <div class="project-card" data-category="swe ba">
+          <h3 class="mb-2">BPM Portals</h3>
+          <p class="mb-4">Built consumer-facing portals with .NET and SQL Server, integrating client systems to improve process efficiency by 20%. Designed Power BI dashboards for insights.</p>
+          <div class="tech-stack">
+            <span class="tech-badge">.NET</span>
+            <span class="tech-badge">SQL Server</span>
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">Power BI</span>
+          </div>
+          <p class="proprietary-note">Proprietary project; code available upon request during interviews.</p>
+        </div>
+        <div class="project-card" data-category="uiux">
+          <h3 class="mb-2">UI/UX Dashboard Designs</h3>
+          <p class="mb-4">Created intuitive dashboards and icons for mining applications using Vue.js and Bootstrap. Designed a slider icon with gradient blue bar for adjustments.</p>
+          <div class="tech-stack">
+            <span class="tech-badge">Vue.js</span>
+            <span class="tech-badge">Bootstrap</span>
+            <span class="tech-badge">Figma</span>
+          </div>
+          <p class="figma-link"><a href="https://your-figma-link">View Designs</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-center mb-12">Experience</h2>
+      <div class="space-y-6">
+        <div class="experience-card">
+          <h3>Specialist Software Engineer, Thiess Pty Ltd</h3>
+          <p class="text-gray-600">Gurugram, India | Nov 2022 – Present</p>
+          <ul class="list-disc pl-6">
+            <li>Developed myThiess, a mobile app to digitize leave requests and approvals using Ionic, Vue.js, and Azure services, replacing error-prone paper-based processes for front-line workers.</li>
+            <li>Developed Infomine, improving data accuracy by 30% using C#, .NET Core, and SQL Server.</li>
+            <li>Designed REST APIs with SignalR and automated workflows with Azure Data Factory, saving 10 hours weekly.</li>
+            <li>Built Vue.js frontends and UI/UX components, enhancing user engagement.</li>
+          </ul>
+        </div>
+        <div class="experience-card">
+          <h3>Software Engineer, LTIMindtree</h3>
+          <p class="text-gray-600">Mumbai, India | Jul 2020 – Nov 2022</p>
+          <ul class="list-disc pl-6">
+            <li>Developed BPM portals with .NET, increasing client satisfaction by 20%.</li>
+            <li>Led AWS server migration with zero downtime and resolved 95% of issues within SLA.</li>
+            <li>Analyzed requirements and delivered SQL Server-based reports for stakeholders.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section id="education">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-center mb-12">Education</h2>
+      <div class="space-y-6">
+        <div class="education-card">
+          <h3>Bachelor of Tech Wizardry (B.Tech in Computer Science)</h3>
+          <p class="text-gray-600">UPES, Dehradun, India | 2016 – 2020</p>
+          <p class="mt-2">
+            Set sail on a grand adventure at UPES, Dehradun, where I embarked on a B.Tech in Computer Science with a focus on Cloud Computing and Virtualization Technologies. Mastered the arcane arts of Software Engineering, Cybersecurity, and Cloud Computing through rigorous coursework. Forged a magical IoT research project for logging vehicle road conditions—think of me as a tech alchemist, turning data into gold for smarter roads!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Let's Connect Section -->
+  <section id="lets-connect">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="mb-8">Let's Connect</h2>
+      <p class="text-lg mb-8">
+        I'm always excited to collaborate on new projects, discuss opportunities, or share ideas. Feel free to reach out—I’d love to hear from you!
+      </p>
+      <div class="static-icons">
+        <a href="mailto:abhilk985@gmail.com">
+          <i class="fas fa-envelope"></i>
+          <span class="tooltip">Email</span>
+        </a>
+        <a href="https://linkedin.com/in/abhishek-yadav-2107">
+          <i class="fab fa-linkedin"></i>
+          <span class="tooltip">LinkedIn</span>
+        </a>
+        <a href="https://github.com/your-username">
+          <i class="fab fa-github"></i>
+          <span class="tooltip">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to Top Button -->
+  <a href="#" id="back-to-top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Abhishek Yadav. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Typed.js for Roles in Hero Section
+    new Typed('#typed', {
+      strings: [
+        'Software Engineer',
+        'Integrations & Automation Specialist',
+        'Business Analyst'
+      ],
+      typeSpeed: 40,
+      backSpeed: 20,
+      startDelay: 500,
+      backDelay: 1000,
+      loop: true,
+      cursorChar: '|'
+    });
+
+    // Smooth scrolling for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Navbar Visibility on Scroll
+    const navbar = document.querySelector('.navbar');
+    const heroSectionHeight = document.querySelector('#about').offsetHeight;
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > heroSectionHeight - 50) {
+        navbar.classList.add('visible');
+      } else {
+        navbar.classList.remove('visible');
+      }
+    });
+
+    // Floating Sidebar Visibility with Animation for Let's Connect Section
+    const floatingSidebar = document.querySelector('.floating-sidebar');
+    const letsConnectSection = document.querySelector('#lets-connect');
+    const sidebarObserverOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5
+    };
+
+    const sidebarObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          floatingSidebar.classList.remove('visible');
+          floatingSidebar.classList.add('hidden');
+          setTimeout(() => {
+            if (floatingSidebar.classList.contains('hidden')) {
+              floatingSidebar.style.display = 'none';
+            }
+          }, 700);
+        } else {
+          floatingSidebar.style.display = 'flex';
+          floatingSidebar.classList.remove('hidden');
+          floatingSidebar.classList.add('visible');
+        }
+      });
+    }, sidebarObserverOptions);
+
+    sidebarObserver.observe(letsConnectSection);
+
+    // Project Filter
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filter = button.getAttribute('data-filter');
+        projectCards.forEach(card => {
+          const categories = card.getAttribute('data-category').split(' ');
+          if (filter === 'all' || categories.includes(filter)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Back to Top Button
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTop.style.display = 'block';
+      } else {
+        backToTop.style.display = 'none';
+      }
+    });
+
+    // Section Visibility on Scroll (for fade-in effect)
+    const sections = document.querySelectorAll('section');
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const visibilityObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          const heading = entry.target.querySelector('h2');
+          if (heading) heading.classList.add('visible');
+
+          const cards = entry.target.querySelectorAll('.skills-card, .project-card, .experience-card, .education-card');
+          cards.forEach((card, index) => {
+            setTimeout(() => {
+              card.classList.add('visible');
+            }, index * 100);
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => {
+      visibilityObserver.observe(section);
+    });
+
+    // Highlight Navbar Link Based on Section in View
+    const navLinks = document.querySelectorAll('.nav-link');
+    const highlightObserverOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5
+    };
+
+    const highlightObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.remove('active'));
+          const sectionId = entry.target.getAttribute('id');
+          const correspondingLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+          if (correspondingLink) {
+            correspondingLink.classList.add('active');
+          }
+        }
+      });
+    }, highlightObserverOptions);
+
+    sections.forEach(section => {
+      highlightObserver.observe(section);
+    });
+  </script>
+</body>
+</html>
